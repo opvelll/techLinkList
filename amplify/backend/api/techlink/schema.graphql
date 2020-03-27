@@ -1,0 +1,10 @@
+type LinkData
+  @model
+  @auth(rules: [{ allow: public, provider: iam }])
+  @searchable {
+  id: ID!
+  title: String
+  discription: String
+  url: AWSURL!
+  tag: [String]
+}
