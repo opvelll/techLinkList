@@ -1,0 +1,7 @@
+type LinkData @model @auth(rules: [{ allow: public, provider: iam }]) {
+  id: ID!
+  title: String
+  discription: String
+  url: AWSURL!
+  tag: [String]
+}
