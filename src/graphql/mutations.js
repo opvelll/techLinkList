@@ -9,7 +9,7 @@ export const createLinkData = /* GraphQL */ `
     createLinkData(input: $input, condition: $condition) {
       id
       title
-      discription
+      description
       url
       tag
     }
@@ -23,7 +23,7 @@ export const updateLinkData = /* GraphQL */ `
     updateLinkData(input: $input, condition: $condition) {
       id
       title
-      discription
+      description
       url
       tag
     }
@@ -37,7 +37,7 @@ export const deleteLinkData = /* GraphQL */ `
     deleteLinkData(input: $input, condition: $condition) {
       id
       title
-      discription
+      description
       url
       tag
     }

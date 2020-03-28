@@ -6,7 +6,7 @@ export const getLinkData = /* GraphQL */ `
     getLinkData(id: $id) {
       id
       title
-      discription
+      description
       url
       tag
     }
@@ -22,7 +22,7 @@ export const listLinkDatas = /* GraphQL */ `
       items {
         id
         title
-        discription
+        description
         url
         tag
       }
@@ -46,7 +46,7 @@ export const searchLinkDatas = /* GraphQL */ `
       items {
         id
         title
-        discription
+        description
         url
         tag
       }

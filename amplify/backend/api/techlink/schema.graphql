@@ -1,18 +1,7 @@
-type LinkData
-  @model
-  @auth(
-    rules: [
-      {
-        allow: public
-        provider: iam
-        operations: [create, update, delete, read]
-      }
-    ]
-  )
-  @searchable {
+type LinkData @model @searchable {
   id: ID!
   title: String
-  discription: String
+  description: String
   url: AWSURL!
   tag: [String]
 }

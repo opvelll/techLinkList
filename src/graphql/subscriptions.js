@@ -6,7 +6,7 @@ export const onCreateLinkData = /* GraphQL */ `
     onCreateLinkData {
       id
       title
-      discription
+      description
       url
       tag
     }
@@ -17,7 +17,7 @@ export const onUpdateLinkData = /* GraphQL */ `
     onUpdateLinkData {
       id
       title
-      discription
+      description
       url
       tag
     }
@@ -28,7 +28,7 @@ export const onDeleteLinkData = /* GraphQL */ `
     onDeleteLinkData {
       id
       title
-      discription
+      description
       url
       tag
     }
