@@ -12,5 +12,13 @@
 				}
 			}
 		}
+	},
+	"auth": {
+		"techlink5de27211": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [],
+			"customAuth": false
+		}
 	}
 }

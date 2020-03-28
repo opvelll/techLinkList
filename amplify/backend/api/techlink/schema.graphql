@@ -1,6 +1,14 @@
 type LinkData
   @model
-  @auth(rules: [{ allow: public, provider: iam }])
+  @auth(
+    rules: [
+      {
+        allow: public
+        provider: iam
+        operations: [create, update, delete, read]
+      }
+    ]
+  )
   @searchable {
   id: ID!
   title: String

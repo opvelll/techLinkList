@@ -1,4 +1,4 @@
-type LinkData @model @auth(rules: [{ allow: public, provider: iam }]) {
+type LinkData @model {
   id: ID!
   title: String
   discription: String

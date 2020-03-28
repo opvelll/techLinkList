@@ -30,3 +30,28 @@ export const listLinkDatas = /* GraphQL */ `
     }
   }
 `;
+export const searchLinkDatas = /* GraphQL */ `
+  query SearchLinkDatas(
+    $filter: SearchableLinkDataFilterInput
+    $sort: SearchableLinkDataSortInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    searchLinkDatas(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        discription
+        url
+        tag
+      }
+      nextToken
+      total
+    }
+  }
+`;
