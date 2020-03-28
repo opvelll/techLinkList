@@ -1,5 +1,6 @@
 {
-    "AppSyncApiName": "techlink",
-    "DynamoDBBillingMode": "PAY_PER_REQUEST",
-    "DynamoDBEnableServerSideEncryption": "false"
+  "AppSyncApiName": "techlink",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": "false",
+  "APIKeyExpirationEpoch": -1
 }
