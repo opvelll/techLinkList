@@ -12,6 +12,8 @@ export const createLinkData = /* GraphQL */ `
       description
       url
       tag
+      createdAt
+      updatedAT
     }
   }
 `;
@@ -26,6 +28,8 @@ export const updateLinkData = /* GraphQL */ `
       description
       url
       tag
+      createdAt
+      updatedAT
     }
   }
 `;
@@ -40,6 +44,8 @@ export const deleteLinkData = /* GraphQL */ `
       description
       url
       tag
+      createdAt
+      updatedAT
     }
   }
 `;

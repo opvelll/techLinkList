@@ -9,6 +9,8 @@ export const getLinkData = /* GraphQL */ `
       description
       url
       tag
+      createdAt
+      updatedAT
     }
   }
 `;
@@ -25,6 +27,8 @@ export const listLinkDatas = /* GraphQL */ `
         description
         url
         tag
+        createdAt
+        updatedAT
       }
       nextToken
     }
@@ -49,6 +53,8 @@ export const searchLinkDatas = /* GraphQL */ `
         description
         url
         tag
+        createdAt
+        updatedAT
       }
       nextToken
       total

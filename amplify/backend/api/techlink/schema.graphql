@@ -4,4 +4,6 @@ type LinkData @model @searchable {
   description: String
   url: AWSURL!
   tag: [String]
+  createdAt: AWSDateTime
+  updatedAT: AWSDateTime
 }
