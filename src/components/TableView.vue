@@ -12,7 +12,7 @@
     >
       <!-- タイトル部分 -->
       <template v-slot:cell(title)="data">
-        <a :href="data.item.title" target="_blank">{{ data.item.title }}</a>
+        <a :href="data.item.url" target="_blank">{{ data.item.title }}</a>
       </template>
       <!-- 日付部分 -->
       <template v-slot:cell(createdAt)="data">{{ data.item.createdAt | moment("lll") }}</template>
