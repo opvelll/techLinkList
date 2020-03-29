@@ -8,7 +8,7 @@
       <!-- tag table -->
       <div class="mb-5 mt-2" v-if="tagTable.list.length !== 0">
         <div>
-          <label for="tags-search">
+          <label for="tags-search" class="d-flex justify-content-center">
             <h5 class="mb-1">タグ検索</h5>
           </label>
           <b-form-tags
@@ -35,7 +35,7 @@
             <b-card class="mb-2">
               <b-form class="col">
                 <div class="d-flex flex-column align-items-center">
-                  <h4>新しくURLを登録する</h4>
+                  <h5>新しくURLを登録する</h5>
                 </div>
 
                 <b-form-group
@@ -241,8 +241,12 @@ export default {
     this.searchLatestList();
 
     if (localStorage.tag) {
-      console.log(JSON.parse(localStorage.tag));
-      this.searchTag(JSON.parse(localStorage.tag));
+      var tags = JSON.parse(localStorage.tag);
+      console.log(tags);
+      if (tags.length > 0) {
+        this.searchTag(tags);
+        console.log(tags);
+      }
     }
   }
 };
