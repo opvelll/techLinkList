@@ -133,10 +133,10 @@ export default {
     OnClickTag(tagStr) {
       this.$emit("clickTag", tagStr);
     },
-    OnClickRow(item, data) {
-      console.log(item);
-      console.log(data);
-    },
+    // OnClickRow(item, data) {
+    //   // console.log(item);
+    //   // console.log(data);
+    // },
     // 変更ボタン
     OnClickUpdateRow(row) {
       row.toggleDetails();
@@ -173,7 +173,7 @@ export default {
       })
         .then(this.OnUpdateFinished)
         .catch(e => {
-          console.log(e);
+          // console.log(e);
           this.errorMessage = e.errors[0].message;
           this.$bvModal.show("my-modal");
         });

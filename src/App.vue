@@ -5,6 +5,7 @@
       <!-- <b-nav-text>なにかのURLリスト</b-nav-text> -->
     </b-nav>
     <div class="container">
+      <b-modal id="my-modal2">{{errorMessage}}</b-modal>
       <!-- tag table -->
       <div class="mb-5 mt-2" v-if="tagTable.list.length !== 0">
         <div>
@@ -106,6 +107,7 @@ export default {
   components: { TableView },
   data() {
     return {
+      errorMessage: "",
       latestTable: {
         nextButton: "続きを読み込む",
         isBusy: true,
@@ -154,7 +156,11 @@ export default {
         .then(a => {
           f(a);
         })
-        .catch(e => console.log(e));
+        .catch(e => {
+          // console.log(e)
+          this.errorMessage = e.errors[0].message;
+          this.$bvModal.show("my-modal2");
+        });
     },
 
     // @serachableでsortしながら全クエリ
@@ -171,8 +177,9 @@ export default {
         this.tableListUpdateProcess(false, this.latestTable)
       );
     },
+    // tagを検索 [String] -> ()
     searchTag(strList) {
-      console.log(strList);
+      // console.log(strList);
       this.tagTable.searchTag = strList;
       localStorage.tag = JSON.stringify(strList);
 
@@ -242,10 +249,10 @@ export default {
 
     if (localStorage.tag) {
       var tags = JSON.parse(localStorage.tag);
-      console.log(tags);
+      // console.log(tags);
       if (tags.length > 0) {
         this.searchTag(tags);
-        console.log(tags);
+        // console.log(tags);
       }
     }
   }
