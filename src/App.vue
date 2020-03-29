@@ -6,9 +6,18 @@
     </b-nav>
     <div class="container">
       <!-- tag table -->
-      <div class="mb-5" v-if="tagTable.list.length !== 0">
-        <div class="d-flex justify-content-center">
-          <h5>Tag検索: "{{ tagTable.searchTag }}"</h5>
+      <div class="mb-5 mt-2" v-if="tagTable.list.length !== 0">
+        <div>
+          <label for="tags-search">
+            <h5 class="mb-1">タグ検索</h5>
+          </label>
+          <b-form-tags
+            input-id="tags-search"
+            separator=" ,;"
+            placeholder="入力してスペースキーか、エンターキーを押す"
+            v-model="tagTable.searchTag"
+            @input="OnInputTag"
+          ></b-form-tags>
         </div>
         <table-view :table-data="tagTable" @clickTag="OnClickTag" @clickNext="OnClickTagTabelNext"></table-view>
       </div>
@@ -161,12 +170,13 @@ export default {
         this.tableListUpdateProcess(false, this.latestTable)
       );
     },
-    searchTag(str) {
-      this.tagTable.searchTag = str;
-      localStorage.tag = str;
+    searchTag(strList) {
+      console.log(strList);
+      this.tagTable.searchTag = strList;
+      localStorage.tag = JSON.stringify(strList);
 
       var value = {
-        filter: { tag: { match: str } },
+        filter: { tag: { match: strList.join(" ") } },
         sort: {
           field: "createdAt",
           direction: "desc"
@@ -177,9 +187,13 @@ export default {
         this.tableListUpdateProcess(true, this.tagTable)
       );
     },
+    // tag 検索
+    OnInputTag() {
+      this.searchTag(this.tagTable.searchTag);
+    },
     // tagをクリック時 tag検索
     OnClickTag(str) {
-      this.searchTag(str);
+      this.searchTag([str]);
     },
     // 新着続きをクリック
     OnClickNext() {
@@ -226,8 +240,8 @@ export default {
     this.searchLatestList();
 
     if (localStorage.tag) {
-      console.log(localStorage.tag);
-      this.searchTag(localStorage.tag);
+      console.log(JSON.parse(localStorage.tag));
+      this.searchTag(JSON.parse(localStorage.tag));
     }
   }
 };
