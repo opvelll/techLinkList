@@ -132,7 +132,7 @@ export default {
       // 反映を待って 2秒後検索
       setTimeout(() => {
         this.searchLatestList();
-      }, 2000);
+      }, 1000);
     },
 
     // api 叩いたあとの処理
