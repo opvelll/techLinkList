@@ -1,73 +1,32 @@
 <template>
   <div id="app">
+    <!-- nav -->
     <b-nav align="center" id="nav">
       <b-nav-text>なにかのURLリスト</b-nav-text>
     </b-nav>
     <div class="container">
+      <!-- tag table -->
+      <div class="mb-5" v-if="tagTable.list.length !== 0">
+        <div class="d-flex justify-content-center">
+          <h5>Tag検索: "{{ tagTable.searchTag }}"</h5>
+        </div>
+        <table-view
+          :table-data="tagTable"
+          @clickTag="OnClickTag"
+          @clickNext="OnClickTagTabelNext"
+        ></table-view>
+      </div>
       <div class="mb-5">
-        <!-- テーブル -->
+        <!-- 新着 table -->
         <div class="d-flex justify-content-center">
           <h5>新着</h5>
         </div>
-
-        <b-table
-          borderless
-          small
-          fixed
-          stacked="md"
-          :fields="fields"
-          :items="latestTable.list"
-          :busy="latestTable.isBusy"
-        >
-          <!-- tag 部分 -->
-          <template v-slot:cell(tag)="data">
-            <h5>
-              <b-badge
-                class="mr-1"
-                variant="info"
-                style="cursor: pointer"
-                v-for="(tagStr, idx) in data.item.tag"
-                v-bind:key="idx"
-                @click="OnClickTag(tagStr)"
-                >{{ tagStr }}</b-badge
-              >
-            </h5>
-          </template>
-          <!-- url部分 -->
-          <template v-slot:cell(url)="data">
-            <a :href="data.item.url">{{ data.item.url }}</a>
-          </template>
-          <!-- ロード画面 -->
-          <template v-slot:table-busy>
-            <div class="text-center text-danger my-2">
-              <b-spinner class="align-middle"></b-spinner>
-              <strong>Loading...</strong>
-            </div>
-          </template></b-table
-        >
-        <div class="d-flex justify-content-center" v-if="latestTable.nextToken">
-          <b-button variant="outline-primary" @click="OnClickNext"
-            >新着続き</b-button
-          >
-        </div>
+        <table-view
+          :table-data="tagTable"
+          @clickTag="OnClickTag"
+          @clickNext="OnClickNext"
+        ></table-view>
       </div>
-      <!-- <amplify-connect :query="listLinkDatasQuery">
-        <template slot-scope="{ loading, data, errors }">
-          <div v-if="loading">Loading...</div>
-
-          <div v-else-if="errors.length > 0"></div>
-
-          <div v-else-if="data" class="d-flex flex-column align-items-center">
-            <div
-              class="d-flex"
-              v-for="item in data.listLinkDatas.items"
-              v-bind:key="item.id"
-            >
-              {{ item.title }}
-            </div>
-          </div>
-        </template>
-      </amplify-connect> -->
       <amplify-connect
         :mutation="createLinkDataMutation"
         @done="onCreateFinished"
@@ -90,7 +49,7 @@
                 <b-form-tags
                   input-id="tag-input"
                   separator=" ,;"
-                  placeholder="tagを入力してスペースキーか、エンターキーを押す"
+                  placeholder="入力してスペースキーか、エンターキーを押す"
                   v-model="createForm.tag"
                 ></b-form-tags>
               </b-form-group>
@@ -124,16 +83,27 @@
 <script>
 import { listLinkDatas, searchLinkDatas } from "./graphql/queries";
 import { createLinkData } from "./graphql/mutations";
+import TableView from "./components/TableView";
 
 export default {
   name: "App",
+  components: { TableView },
   data() {
     return {
-      fields: ["createdAt", "title", "tag", "url"],
-      latestTable: { isBusy: true, list: [], nextToken: "" },
+      latestTable: {
+        nextButton: "新着続き",
+        isBusy: true,
+        list: [],
+        nextToken: ""
+      },
+      tagTable: {
+        nextButton: "Tag検索続き",
+        searchTag: "",
+        isBusy: true,
+        list: [],
+        nextToken: ""
+      },
 
-      tagSearchList: [],
-      tagSearchNextToken: "",
       createForm: { title: "", url: "", tag: [] }
     };
   },
@@ -146,21 +116,18 @@ export default {
         this.searchLatestList();
       }, 2000);
     },
-    // queryList() {
-    //   this.$Amplify.API.graphql({
-    //     query: listLinkDatas
-    //   })
-    //     .then(a => (this.latestList = a.data.listLinkDatas.items))
-    //     .catch(e => console.log(e));
-    // },
 
     // api 叩いたあとの処理
-    latestTableProcess(graphqlReturn) {
-      this.latestTable.list = this.latestTable.list.concat(
-        graphqlReturn.data.searchLinkDatas.items
-      );
-      this.latestTable.isBusy = false;
-      this.latestTable.nextToken = graphqlReturn.data.searchLinkDatas.nextToken;
+    latestTableProcess(isInit, table) {
+      return result => {
+        if (isInit) {
+          table.list = result.data.searchLinkDatas.items;
+        } else {
+          table.list = table.list.concat(result.data.searchLinkDatas.items);
+        }
+        table.isBusy = false;
+        table.nextToken = result.data.searchLinkDatas.nextToken;
+      };
     },
 
     searchLinkDatas(value, f) {
@@ -183,10 +150,15 @@ export default {
         },
         limit: 5
       };
-      this.searchLinkDatas(val, this.latestTableProcess);
+      this.searchLinkDatas(
+        val,
+        this.latestTableProcess(false, this.latestTable)
+      );
     },
     // tagをクリック時 tag検索
     OnClickTag(str) {
+      this.tagTable.searchTag = str;
+
       var value = {
         filter: { tag: { match: str } },
         sort: {
@@ -194,9 +166,9 @@ export default {
           direction: "desc"
         }
       };
-      this.searchLinkDatas(value, this.latestTableProcess);
+      this.searchLinkDatas(value, this.latestTableProcess(true, this.tagTable));
     },
-    // next tokenで続き
+    // 新着続きをクリック
     OnClickNext() {
       var val = {
         sort: {
@@ -206,7 +178,25 @@ export default {
         limit: 5,
         nextToken: this.latestTable.nextToken
       };
-      this.searchLinkDatas(val, this.latestTableProcess);
+      this.searchLinkDatas(
+        val,
+        this.latestTableProcess(false, this.latestTable)
+      );
+    },
+    // tagテーブルのnextクリック時
+    OnClickTagTabelNext() {
+      var value = {
+        filter: { tag: { match: this.tagTable.searchTag } },
+        sort: {
+          field: "createdAt",
+          direction: "desc"
+        },
+        nextToken: this.tagTable.nextToken
+      };
+      this.searchLinkDatas(
+        value,
+        this.latestTableProcess(false, this.tagTable)
+      );
     }
   },
   computed: {
