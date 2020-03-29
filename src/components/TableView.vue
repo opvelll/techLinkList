@@ -4,7 +4,6 @@
     <b-table
       borderless
       small
-      hover
       stacked="md"
       :fields="fields"
       :items="tableData.list"
@@ -15,7 +14,7 @@
         <a :href="data.item.title">{{ data.item.title }}</a>
       </template>
       <!-- 日付部分 -->
-      <template v-slot:cell(createdAt)="data">{{ data.item.createdAt | moment("llll") }}</template>
+      <template v-slot:cell(createdAt)="data">{{ data.item.createdAt | moment("lll") }}</template>
       <!-- tag 部分 -->
       <template v-slot:cell(tag)="data">
         <h5>
@@ -37,6 +36,57 @@
       <template v-slot:cell(action)="row">
         <b-button size="sm" @click="OnClickUpdateRow(row)">変更</b-button>
       </template>
+      <!-- ditail -->
+      <template v-slot:row-details="row">
+        <b-card>
+          <b-form class="col">
+            <b-form-group
+              label-cols-sm="2"
+              label="タイトル"
+              label-align-sm="right"
+              label-size="sm"
+              label-for="example-datepicker"
+            >
+              <b-form-input
+                type="text"
+                id="example-datepicker"
+                v-model="updateForm[row.index].title"
+              ></b-form-input>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="2"
+              label-align-sm="right"
+              label-size="sm"
+              label="タグ"
+              label-for="tag-input"
+            >
+              <b-form-tags
+                input-id="tag-input"
+                separator=" ,;"
+                placeholder="入力してスペースキーか、エンターキーを押す"
+                v-model="updateForm[row.index].tag"
+              ></b-form-tags>
+            </b-form-group>
+
+            <b-form-group
+              label-cols-sm="2"
+              label-align-sm="right"
+              label-size="sm"
+              label="URL"
+              label-for="sb-inline"
+            >
+              <b-form-input type="url" id="sb-inline" v-model="updateForm[row.index].url"></b-form-input>
+            </b-form-group>
+
+            <div v-for="(error, index) in errors" v-bind:key="index">{{ error.message }}</div>
+
+            <div class="d-flex flex-row-reverse">
+              <b-button class="mr-2" @click="OnClickCancel(row)">閉じる</b-button>
+              <b-button class="mr-2" variant="outline-primary" @click="OnClickUpdate(row)">更新</b-button>
+            </div>
+          </b-form>
+        </b-card>
+      </template>
       <!-- ロード画面 -->
       <template v-slot:table-busy>
         <div class="text-center text-danger my-2">
@@ -45,61 +95,13 @@
         </div>
       </template>
     </b-table>
+    <!-- 続きを読み込む -->
     <div class="d-flex justify-content-center" v-if="tableData.nextToken">
-      <b-button block variant="outline-primary" @click="OnNext">
+      <b-button block variant="outline-secondary" @click="OnNext">
         {{
         tableData.nextButton
         }}
       </b-button>
-    </div>
-    <!-- update Form -->
-    <div v-if="isViewUpdateForm">
-      <b-form class="col">
-        <div class="d-flex flex-column align-items-center">
-          <h4>変更</h4>
-        </div>
-
-        <b-form-group
-          label-cols-sm="2"
-          label="タイトル"
-          label-align-sm="right"
-          label-size="sm"
-          label-for="example-datepicker"
-        >
-          <b-form-input type="text" id="example-datepicker" v-model="updateForm.title"></b-form-input>
-        </b-form-group>
-        <b-form-group
-          label-cols-sm="2"
-          label-align-sm="right"
-          label-size="sm"
-          label="タグ"
-          label-for="tag-input"
-        >
-          <b-form-tags
-            input-id="tag-input"
-            separator=" ,;"
-            placeholder="入力してスペースキーか、エンターキーを押す"
-            v-model="updateForm.tag"
-          ></b-form-tags>
-        </b-form-group>
-
-        <b-form-group
-          label-cols-sm="2"
-          label-align-sm="right"
-          label-size="sm"
-          label="URL"
-          label-for="sb-inline"
-        >
-          <b-form-input type="url" id="sb-inline" v-model="updateForm.url"></b-form-input>
-        </b-form-group>
-
-        <div v-for="(error, index) in errors" v-bind:key="index">{{ error.message }}</div>
-
-        <div class="d-flex flex-row-reverse">
-          <b-button class="mr-2" @click="OnClickCancel">キャンセル</b-button>
-          <b-button class="mr-2" variant="outline-primary" @click="OnClickUpdate">更新</b-button>
-        </div>
-      </b-form>
     </div>
   </div>
 </template>
@@ -119,7 +121,7 @@ export default {
         "action"
       ],
       isViewUpdateForm: false,
-      updateForm: { id: "", title: "", tag: [], url: "" },
+      updateForm: {},
       errors: []
     };
   },
@@ -130,21 +132,22 @@ export default {
     OnClickTag(tagStr) {
       this.$emit("clickTag", tagStr);
     },
-    OnClickRow(item) {
+    OnClickRow(item, data) {
       console.log(item);
+      console.log(data);
     },
     OnClickUpdateRow(row) {
-      this.isViewUpdateForm = !this.isViewUpdateForm;
+      row.toggleDetails();
       let obj = {
         id: row.item.id,
         title: row.item.title,
         tag: row.item.tag,
         url: row.item.url
       };
-      this.updateForm = obj;
+      this.updateForm[row.index] = obj;
     },
-    OnClickCancel() {
-      this.isViewUpdateForm = false;
+    OnClickCancel(row) {
+      row.toggleDetails();
     },
     OnUpdateFinished(result) {
       let idx = -1;
@@ -159,8 +162,8 @@ export default {
         this.tableData.list.splice(idx, 1, result.data.updateLinkData);
       }
     },
-    OnClickUpdate() {
-      let value = { input: Object.assign({}, this.updateForm) };
+    OnClickUpdate(row) {
+      let value = { input: Object.assign({}, this.updateForm[row.index]) };
       // console.log(value);
       this.$Amplify.API.graphql({
         query: updateLinkData,
