@@ -12,6 +12,7 @@
             <h5 class="mb-1">タグ検索</h5>
           </label>
           <b-form-tags
+            class="mb-2"
             input-id="tags-search"
             separator=" ,;"
             placeholder="入力してスペースキーか、エンターキーを押す"

@@ -2,6 +2,7 @@
   <!-- テーブル -->
   <div>
     <b-table
+      class="mb-1"
       borderless
       small
       stacked="md"
@@ -78,7 +79,7 @@
               <b-form-input type="url" id="sb-inline" v-model="updateForm[row.index].url"></b-form-input>
             </b-form-group>
 
-            <div v-for="(error, index) in errors" v-bind:key="index">{{ error.message }}</div>
+            <b-modal id="my-modal">{{errorMessage}}</b-modal>
 
             <div class="d-flex flex-row-reverse">
               <b-button class="mr-2" @click="OnClickCancel(row)">閉じる</b-button>
@@ -97,7 +98,7 @@
     </b-table>
     <!-- 続きを読み込む -->
     <div class="d-flex justify-content-center" v-if="tableData.nextToken">
-      <b-button block variant="outline-secondary" @click="OnNext">
+      <b-button block variant="link" @click="OnNext">
         {{
         tableData.nextButton
         }}
@@ -122,7 +123,7 @@ export default {
       ],
       isViewUpdateForm: false,
       updateForm: {},
-      errors: []
+      errorMessage: ""
     };
   },
   methods: {
@@ -136,6 +137,7 @@ export default {
       console.log(item);
       console.log(data);
     },
+    // 変更ボタン
     OnClickUpdateRow(row) {
       row.toggleDetails();
       let obj = {
@@ -172,6 +174,8 @@ export default {
         .then(this.OnUpdateFinished)
         .catch(e => {
           console.log(e);
+          this.errorMessage = e.errors[0].message;
+          this.$bvModal.show("my-modal");
         });
     }
   },
