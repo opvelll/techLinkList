@@ -12,7 +12,9 @@ Amplify.configure(awsconfig);
 Vue.use(AmplifyPlugin, AmplifyModules);
 
 // vue-moment
-Vue.use(require("vue-moment"));
+const moment = require("moment");
+require("moment/locale/ja");
+Vue.use(require("vue-moment"), { moment });
 
 new Vue({
   render: h => h(App)

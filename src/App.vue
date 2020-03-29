@@ -161,9 +161,9 @@ export default {
         this.tableListUpdateProcess(false, this.latestTable)
       );
     },
-    // tagをクリック時 tag検索
-    OnClickTag(str) {
+    searchTag(str) {
       this.tagTable.searchTag = str;
+      localStorage.tag = str;
 
       var value = {
         filter: { tag: { match: str } },
@@ -176,6 +176,10 @@ export default {
         value,
         this.tableListUpdateProcess(true, this.tagTable)
       );
+    },
+    // tagをクリック時 tag検索
+    OnClickTag(str) {
+      this.searchTag(str);
     },
     // 新着続きをクリック
     OnClickNext() {
@@ -220,6 +224,11 @@ export default {
   },
   mounted() {
     this.searchLatestList();
+
+    if (localStorage.tag) {
+      console.log(localStorage.tag);
+      this.searchTag(localStorage.tag);
+    }
   }
 };
 </script>
