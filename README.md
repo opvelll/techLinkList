@@ -4,4 +4,4 @@
 
 https://techlink.d2iaia9h9jeav.amplifyapp.com/
 
-![techlink](./src/assets/techlink.png)
+![techlink](./src/assets/techLink.png)
