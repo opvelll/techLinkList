@@ -129,7 +129,7 @@ export default {
     onCreateFinished() {
       this.latestTable.isBusy = true;
       this.latestTable.list = [];
-      // 反映を待って 2秒後検索
+      // 反映を待って検索
       setTimeout(() => {
         this.searchLatestList();
       }, 1000);
