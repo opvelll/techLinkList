@@ -1,24 +1,7 @@
 # techlink
 
-## Project setup
-```
-npm install
-```
+リンクを投稿できるだけのサイト
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+https://techlink.d2iaia9h9jeav.amplifyapp.com/
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+![techlink](./src/assets/techlink.png)
