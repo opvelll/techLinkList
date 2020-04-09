@@ -1,7 +1,9 @@
 type LinkData @model {
   id: ID!
   title: String
-  discription: String
+  description: String
   url: AWSURL!
   tag: [String]
+  createdAt: AWSDateTime
+  updatedAT: AWSDateTime
 }

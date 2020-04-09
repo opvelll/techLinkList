@@ -1,4 +1,4 @@
-type LinkData @model @searchable {
+type LinkData @model {
   id: ID!
   title: String
   description: String

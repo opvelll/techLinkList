@@ -7,7 +7,7 @@
     <div class="container">
       <b-modal id="my-modal2">{{errorMessage}}</b-modal>
       <!-- tag table -->
-      <div class="mb-5 mt-2" v-if="tagTable.list.length !== 0">
+      <div class="mb-5 mt-2" v-if="tagTable.searchTag.length > 0">
         <div>
           <label for="tags-search" class="d-flex justify-content-center">
             <h5 class="mb-1">タグ検索</h5>
@@ -21,7 +21,12 @@
             @input="OnInputTag"
           ></b-form-tags>
         </div>
-        <table-view :table-data="tagTable" @clickTag="OnClickTag" @clickNext="OnClickTagTabelNext"></table-view>
+        <table-view
+          :table-data="tagTable"
+          @clickTag="OnClickTag"
+          @clickNext="OnClickTagTabelNext"
+          v-if="tagTable.list.length !== 0"
+        ></table-view>
       </div>
       <div class="mb-5">
         <!-- 新着 table -->
@@ -98,7 +103,7 @@
 </template>
 
 <script>
-import { listLinkDatas, searchLinkDatas } from "./graphql/queries";
+import { listLinkDatas } from "./graphql/queries";
 import { createLinkData } from "./graphql/mutations";
 import TableView from "./components/TableView";
 
@@ -139,18 +144,22 @@ export default {
     tableListUpdateProcess(isInit, table) {
       return result => {
         if (isInit) {
-          table.list = result.data.searchLinkDatas.items;
+          table.list = result.data.listLinkDatas.items;
         } else {
-          table.list = table.list.concat(result.data.searchLinkDatas.items);
+          table.list = table.list.concat(result.data.listLinkDatas.items);
         }
         table.isBusy = false;
-        table.nextToken = result.data.searchLinkDatas.nextToken;
+        table.nextToken = result.data.listLinkDatas.nextToken;
       };
     },
 
+    // 検索処理
+    // value クエリの変数
+    // f クエリのあとの処理
     searchLinkDatas(value, f) {
+      // console.log(value, f);
       this.$Amplify.API.graphql({
-        query: searchLinkDatas,
+        query: listLinkDatas,
         variables: value
       })
         .then(a => {
@@ -159,45 +168,60 @@ export default {
         .catch(e => {
           // console.log(e)
           this.errorMessage = e.errors[0].message;
+          // エラーはモーダルで出す。
           this.$bvModal.show("my-modal2");
         });
     },
 
     // @serachableでsortしながら全クエリ
+    // 全検索
     searchLatestList() {
-      var val = {
-        sort: {
-          field: "createdAt",
-          direction: "desc"
-        },
+      // var val = {
+      //   sort: {
+      //     field: "createdAt",
+      //     direction: "desc"
+      //   },
+      //   limit: 10
+      // };
+      var value2 = {
         limit: 10
       };
       this.searchLinkDatas(
-        val,
+        value2,
         this.tableListUpdateProcess(false, this.latestTable)
       );
     },
-    // tagを検索 [String] -> ()
+    // tagを検索
+    // strList : [String] tagのリスト
     searchTag(strList) {
-      // console.log(strList);
+      console.log(strList);
+      //
       this.tagTable.searchTag = strList;
       localStorage.tag = JSON.stringify(strList);
 
-      var value = {
-        filter: { tag: { match: strList.join(" ") } },
-        sort: {
-          field: "createdAt",
-          direction: "desc"
-        }
+      // var value = {
+      //   filter: { tag: { match: strList.join(" ") } },
+      //   sort: {
+      //     field: "createdAt",
+      //     direction: "desc"
+      //   }
+      // };
+
+      var value2 = {
+        filter: { tag: { contains: strList.join(" ") } },
+        limit: 10
       };
+
       this.searchLinkDatas(
-        value,
+        value2,
         this.tableListUpdateProcess(true, this.tagTable)
       );
     },
-    // tag 検索
+    // tag テーブルに付いている検索
     OnInputTag() {
-      this.searchTag(this.tagTable.searchTag);
+      if (this.tagTable.searchTag.length > 0) {
+        this.searchTag(this.tagTable.searchTag);
+      }
     },
     // tagをクリック時 tag検索
     OnClickTag(str) {
@@ -220,24 +244,26 @@ export default {
     },
     // tagテーブルのnextクリック時
     OnClickTagTabelNext() {
-      var value = {
-        filter: { tag: { match: this.tagTable.searchTag } },
-        sort: {
-          field: "createdAt",
-          direction: "desc"
-        },
+      // var value = {
+      //   filter: { tag: { match: this.tagTable.searchTag } },
+      //   sort: {
+      //     field: "createdAt",
+      //     direction: "desc"
+      //   },
+      //   nextToken: this.tagTable.nextToken
+      // };
+      var value2 = {
+        filter: { tag: { contains: this.tagTable.searchTag } },
         nextToken: this.tagTable.nextToken
       };
       this.searchLinkDatas(
-        value,
+        value2,
         this.tableListUpdateProcess(false, this.tagTable)
       );
     }
   },
   computed: {
-    listLinkDatasQuery() {
-      return this.$Amplify.graphqlOperation(listLinkDatas);
-    },
+    // 作成フォームをクリック時のクエリ
     createLinkDataMutation() {
       const value = { input: Object.assign({}, this.createForm) };
       // console.log(value);
@@ -245,8 +271,10 @@ export default {
     }
   },
   mounted() {
+    // 全検索
     this.searchLatestList();
 
+    // ローカルストレージに前のタグ検索履歴があったら、タグを検索
     if (localStorage.tag) {
       var tags = JSON.parse(localStorage.tag);
       // console.log(tags);
