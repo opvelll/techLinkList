@@ -173,16 +173,8 @@ export default {
         });
     },
 
-    // @serachableでsortしながら全クエリ
     // 全検索
     searchLatestList() {
-      // var val = {
-      //   sort: {
-      //     field: "createdAt",
-      //     direction: "desc"
-      //   },
-      //   limit: 10
-      // };
       var value2 = {
         limit: 10
       };
@@ -194,18 +186,10 @@ export default {
     // tagを検索
     // strList : [String] tagのリスト
     searchTag(strList) {
-      console.log(strList);
+      // console.log(strList);
       //
       this.tagTable.searchTag = strList;
       localStorage.tag = JSON.stringify(strList);
-
-      // var value = {
-      //   filter: { tag: { match: strList.join(" ") } },
-      //   sort: {
-      //     field: "createdAt",
-      //     direction: "desc"
-      //   }
-      // };
 
       var value2 = {
         filter: { tag: { contains: strList.join(" ") } },
@@ -230,10 +214,6 @@ export default {
     // 新着続きをクリック
     OnClickNext() {
       var val = {
-        sort: {
-          field: "createdAt",
-          direction: "desc"
-        },
         limit: 10,
         nextToken: this.latestTable.nextToken
       };
@@ -244,14 +224,6 @@ export default {
     },
     // tagテーブルのnextクリック時
     OnClickTagTabelNext() {
-      // var value = {
-      //   filter: { tag: { match: this.tagTable.searchTag } },
-      //   sort: {
-      //     field: "createdAt",
-      //     direction: "desc"
-      //   },
-      //   nextToken: this.tagTable.nextToken
-      // };
       var value2 = {
         filter: { tag: { contains: this.tagTable.searchTag } },
         nextToken: this.tagTable.nextToken
