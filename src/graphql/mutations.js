@@ -1,6 +1,78 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createPage = /* GraphQL */ `
+  mutation CreatePage(
+    $input: CreatePageInput!
+    $condition: ModelPageConditionInput
+  ) {
+    createPage(input: $input, condition: $condition) {
+      id
+      name
+      linkDatas {
+        items {
+          id
+          pageId
+          title
+          description
+          url
+          tag
+          createdAt
+          updatedAT
+        }
+        nextToken
+      }
+    }
+  }
+`;
+export const updatePage = /* GraphQL */ `
+  mutation UpdatePage(
+    $input: UpdatePageInput!
+    $condition: ModelPageConditionInput
+  ) {
+    updatePage(input: $input, condition: $condition) {
+      id
+      name
+      linkDatas {
+        items {
+          id
+          pageId
+          title
+          description
+          url
+          tag
+          createdAt
+          updatedAT
+        }
+        nextToken
+      }
+    }
+  }
+`;
+export const deletePage = /* GraphQL */ `
+  mutation DeletePage(
+    $input: DeletePageInput!
+    $condition: ModelPageConditionInput
+  ) {
+    deletePage(input: $input, condition: $condition) {
+      id
+      name
+      linkDatas {
+        items {
+          id
+          pageId
+          title
+          description
+          url
+          tag
+          createdAt
+          updatedAT
+        }
+        nextToken
+      }
+    }
+  }
+`;
 export const createLinkData = /* GraphQL */ `
   mutation CreateLinkData(
     $input: CreateLinkDataInput!
@@ -8,6 +80,7 @@ export const createLinkData = /* GraphQL */ `
   ) {
     createLinkData(input: $input, condition: $condition) {
       id
+      pageId
       title
       description
       url
@@ -24,6 +97,7 @@ export const updateLinkData = /* GraphQL */ `
   ) {
     updateLinkData(input: $input, condition: $condition) {
       id
+      pageId
       title
       description
       url
@@ -40,6 +114,7 @@ export const deleteLinkData = /* GraphQL */ `
   ) {
     deleteLinkData(input: $input, condition: $condition) {
       id
+      pageId
       title
       description
       url

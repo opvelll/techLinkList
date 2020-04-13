@@ -5,10 +5,19 @@
       <!-- <b-nav-text>なにかのURLリスト</b-nav-text> -->
     </b-nav>
     <div class="container">
-      <b-modal id="my-modal2">{{errorMessage}}</b-modal>
-      <!-- tag table -->
+      <!-- エラーメッセージを表示するモーダル -->
+      <b-modal id="error_modal">{{errorMessage}}</b-modal>
+
+      <!-- リストを表示するテーブル -->
+      <div class="mb-5 mt-2">
+        <h5>ページ</h5>
+        <b-table borderless small stacked="md"></b-table>
+      </div>
+
+      <!-- 検索 タグテーブル -->
       <div class="mb-5 mt-2" v-if="tagTable.searchTag.length > 0">
         <div>
+          <!-- タグ検索フォーム -->
           <label for="tags-search" class="d-flex justify-content-center">
             <h5 class="mb-1">タグ検索</h5>
           </label>
@@ -28,13 +37,16 @@
           v-if="tagTable.list.length !== 0"
         ></table-view>
       </div>
+
+      <!-- 新着 table -->
       <div class="mb-5">
-        <!-- 新着 table -->
         <div class="d-flex justify-content-center mt-1">
           <h5>新着</h5>
         </div>
         <table-view :table-data="latestTable" @clickTag="OnClickTag" @clickNext="OnClickNext"></table-view>
       </div>
+
+      <!-- 追加フォーム -->
       <amplify-connect :mutation="createLinkDataMutation" @done="onCreateFinished">
         <template slot-scope="{ loading, mutate, errors }">
           <div class>
@@ -169,7 +181,7 @@ export default {
           // console.log(e)
           this.errorMessage = e.errors[0].message;
           // エラーはモーダルで出す。
-          this.$bvModal.show("my-modal2");
+          this.$bvModal.show("error_modal");
         });
     },
 

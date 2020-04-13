@@ -1,5 +1,12 @@
-type LinkData @model {
+type Page @model {
   id: ID!
+  name: String
+  linkDatas: [LinkData] @connection(keyName: "byPageId", fields: ["id"])
+}
+
+type LinkData @model @key(name: "byPageId", fields: ["pageId", "createdAt"]) {
+  id: ID!
+  pageId: ID
   title: String
   description: String
   url: AWSURL!
