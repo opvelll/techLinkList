@@ -15,7 +15,9 @@
         <a :href="data.item.url" target="_blank">{{ data.item.title }}</a>
       </template>
       <!-- 日付部分 -->
-      <template v-slot:cell(createdAt)="data">{{ data.item.createdAt | moment("lll") }}</template>
+      <template v-slot:cell(createdAt)="data">{{
+        data.item.createdAt | moment("lll")
+      }}</template>
       <!-- tag 部分 -->
       <template v-slot:cell(tag)="data">
         <h5>
@@ -26,7 +28,8 @@
             v-for="(tagStr, idx) in data.item.tag"
             v-bind:key="idx"
             @click="OnClickTag(tagStr)"
-          >{{ tagStr }}</b-badge>
+            >{{ tagStr }}</b-badge
+          >
         </h5>
       </template>
       <!-- url部分 -->
@@ -37,7 +40,7 @@
       <template v-slot:cell(action)="row">
         <b-button size="sm" @click="OnClickUpdateRow(row)">変更</b-button>
       </template>
-      <!-- ditail -->
+      <!-- detail -->
       <template v-slot:row-details="row">
         <b-card>
           <b-form class="col">
@@ -76,14 +79,25 @@
               label="URL"
               label-for="sb-inline"
             >
-              <b-form-input type="url" id="sb-inline" v-model="updateForm[row.index].url"></b-form-input>
+              <b-form-input
+                type="url"
+                id="sb-inline"
+                v-model="updateForm[row.index].url"
+              ></b-form-input>
             </b-form-group>
 
-            <b-modal id="my-modal">{{errorMessage}}</b-modal>
+            <b-modal id="my-modal">{{ errorMessage }}</b-modal>
 
             <div class="d-flex flex-row-reverse">
-              <b-button class="mr-2" @click="OnClickCancel(row)">閉じる</b-button>
-              <b-button class="mr-2" variant="outline-primary" @click="OnClickUpdate(row)">更新</b-button>
+              <b-button class="mr-2" @click="OnClickCancel(row)"
+                >閉じる</b-button
+              >
+              <b-button
+                class="mr-2"
+                variant="outline-primary"
+                @click="OnClickUpdate(row)"
+                >更新</b-button
+              >
             </div>
           </b-form>
         </b-card>
@@ -99,9 +113,7 @@
     <!-- 続きを読み込む -->
     <div class="d-flex justify-content-center" v-if="tableData.nextToken">
       <b-button block variant="link" @click="OnNext">
-        {{
-        tableData.nextButton
-        }}
+        {{ tableData.nextButton }}
       </b-button>
     </div>
   </div>
@@ -119,11 +131,11 @@ export default {
         { key: "title", label: "タイトル" },
         "tag",
         "url",
-        "action"
+        "action",
       ],
       isViewUpdateForm: false,
       updateForm: {},
-      errorMessage: ""
+      errorMessage: "",
     };
   },
   methods: {
@@ -144,7 +156,7 @@ export default {
         id: row.item.id,
         title: row.item.title,
         tag: row.item.tag,
-        url: row.item.url
+        url: row.item.url,
       };
       this.updateForm[row.index] = obj;
     },
@@ -169,16 +181,16 @@ export default {
       // console.log(value);
       this.$Amplify.API.graphql({
         query: updateLinkData,
-        variables: value
+        variables: value,
       })
         .then(this.OnUpdateFinished)
-        .catch(e => {
+        .catch((e) => {
           // console.log(e);
           this.errorMessage = e.errors[0].message;
           this.$bvModal.show("my-modal");
         });
-    }
+    },
   },
-  computed: {}
+  computed: {},
 };
 </script>

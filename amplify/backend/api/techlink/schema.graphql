@@ -1,6 +1,7 @@
-type Page @model {
+type Page @model @key(fields: ["address"]) {
   id: ID!
-  name: String
+  name: String!
+  address: String!
   linkDatas: [LinkData] @connection(keyName: "byPageId", fields: ["id"])
 }
 
