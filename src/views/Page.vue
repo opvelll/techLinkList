@@ -1,5 +1,6 @@
 <template>
   <div id="page" class="container">
+    <h4>ページのリスト</h4>
     <amplify-connect :query="listPagesQuery">
       <template slot-scope="{ loading, data, errors }">
         <div v-if="loading">Loading...</div>
@@ -43,7 +44,7 @@
               <b-form-input
                 type="text"
                 id="addressInput"
-                v-model="createPageForm.name"
+                v-model="createPageForm.address"
                 placeholder="taro"
               ></b-form-input>
             </b-form-group>
@@ -75,9 +76,10 @@ import { createPage } from "../graphql/mutations.js";
 export default {
   data() {
     return {
-      fields: [{ key: "name", label: "ページ" }],
+      fields: [{ key: "name", label: "ページ名" }],
       createPageForm: {
         name: "",
+        address: "",
       },
     };
   },

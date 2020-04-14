@@ -9,6 +9,7 @@ export const createPage = /* GraphQL */ `
     createPage(input: $input, condition: $condition) {
       id
       name
+      address
       linkDatas {
         items {
           id
@@ -33,6 +34,7 @@ export const updatePage = /* GraphQL */ `
     updatePage(input: $input, condition: $condition) {
       id
       name
+      address
       linkDatas {
         items {
           id
@@ -57,6 +59,7 @@ export const deletePage = /* GraphQL */ `
     deletePage(input: $input, condition: $condition) {
       id
       name
+      address
       linkDatas {
         items {
           id

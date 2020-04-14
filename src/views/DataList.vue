@@ -5,6 +5,9 @@
       <!-- <b-nav-text>なにかのURLリスト</b-nav-text> -->
     </b-nav>
     <div class="container">
+      <!-- ページ名 -->
+      <router-link to="/"> 戻る</router-link>
+      <h5>{{ $route.params.pageName }}</h5>
       <!-- エラーメッセージを表示するモーダル -->
       <b-modal id="error_modal">{{ errorMessage }}</b-modal>
 

@@ -6,6 +6,7 @@ export const getPage = /* GraphQL */ `
     getPage(id: $id) {
       id
       name
+      address
       linkDatas {
         items {
           id
@@ -32,6 +33,7 @@ export const listPages = /* GraphQL */ `
       items {
         id
         name
+        address
         linkDatas {
           nextToken
         }
@@ -70,6 +72,33 @@ export const listLinkDatas = /* GraphQL */ `
         tag
         createdAt
         updatedAT
+      }
+      nextToken
+    }
+  }
+`;
+export const getPageByAddress = /* GraphQL */ `
+  query GetPageByAddress(
+    $address: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelPageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getPageByAddress(
+      address: $address
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        address
+        linkDatas {
+          nextToken
+        }
       }
       nextToken
     }

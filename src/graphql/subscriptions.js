@@ -6,6 +6,7 @@ export const onCreatePage = /* GraphQL */ `
     onCreatePage {
       id
       name
+      address
       linkDatas {
         items {
           id
@@ -27,6 +28,7 @@ export const onUpdatePage = /* GraphQL */ `
     onUpdatePage {
       id
       name
+      address
       linkDatas {
         items {
           id
@@ -48,6 +50,7 @@ export const onDeletePage = /* GraphQL */ `
     onDeletePage {
       id
       name
+      address
       linkDatas {
         items {
           id
