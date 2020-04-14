@@ -105,7 +105,7 @@
 </template>
 
 <script>
-import { listLinkDatas } from "../graphql/queries";
+import { getPageByAddress } from "../graphql/queries";
 import { createLinkData } from "../graphql/mutations";
 import TableView from "../components/TableView";
 
@@ -114,6 +114,8 @@ export default {
   components: { TableView },
   data() {
     return {
+      name: "",
+      address: "",
       errorMessage: "",
       latestTable: {
         nextButton: "続きを読み込む",
@@ -145,13 +147,19 @@ export default {
     // api 叩いたあとの処理
     tableListUpdateProcess(isInit, table) {
       return (result) => {
+        console.log(result);
         if (isInit) {
-          table.list = result.data.listLinkDatas.items;
+          table.list = result.data.getPageByAddress.items[0].linkDatas.items;
         } else {
-          table.list = table.list.concat(result.data.listLinkDatas.items);
+          table.list = table.list.concat(
+            result.data.getPageByAddress.items[0].linkDatas.items
+          );
         }
+        this.name = result.data.getPageByAddress.items[0].name;
+        this.address = result.data.getPageByAddress.items[0].address;
         table.isBusy = false;
-        table.nextToken = result.data.listLinkDatas.nextToken;
+        table.nextToken =
+          result.data.getPageByAddress.items[0].linkDatas.nextToken;
       };
     },
 
@@ -161,14 +169,14 @@ export default {
     searchLinkDatas(value, f) {
       // console.log(value, f);
       this.$Amplify.API.graphql({
-        query: listLinkDatas,
+        query: getPageByAddress,
         variables: value,
       })
         .then((a) => {
           f(a);
         })
         .catch((e) => {
-          // console.log(e)
+          console.log(e);
           this.errorMessage = e.errors[0].message;
           // エラーはモーダルで出す。
           this.$bvModal.show("error_modal");
@@ -178,6 +186,7 @@ export default {
     // 全検索
     searchLatestList() {
       var value2 = {
+        address: this.address,
         limit: 10,
       };
       this.searchLinkDatas(
@@ -216,6 +225,7 @@ export default {
     // 新着続きをクリック
     OnClickNext() {
       var val = {
+        address: this.address,
         limit: 10,
         nextToken: this.latestTable.nextToken,
       };
@@ -245,6 +255,7 @@ export default {
     },
   },
   mounted() {
+    this.address = this.$route.params.pageName;
     // 全検索
     this.searchLatestList();
 

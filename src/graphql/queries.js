@@ -81,22 +81,29 @@ export const getPageByAddress = /* GraphQL */ `
   query GetPageByAddress(
     $address: String
     $sortDirection: ModelSortDirection
-    $filter: ModelPageFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    getPageByAddress(
-      address: $address
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    getPageByAddress(address: $address) {
       items {
         id
         name
         address
-        linkDatas {
+        linkDatas(
+          nextToken: $nextToken
+          limit: $limit
+          sortDirection: $sortDirection
+        ) {
+          items {
+            id
+            pageId
+            title
+            description
+            url
+            tag
+            createdAt
+            updatedAT
+          }
           nextToken
         }
       }
