@@ -9,6 +9,7 @@
       :fields="fields"
       :items="tableData.list"
       :busy="tableData.isBusy"
+      thead-class="hidden_header"
     >
       <!-- タイトル部分 -->
       <template v-slot:cell(title)="data">
@@ -194,3 +195,8 @@ export default {
   computed: {},
 };
 </script>
+<style>
+.hidden_header {
+  display: none;
+}
+</style>

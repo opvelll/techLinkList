@@ -1,13 +1,15 @@
 <template>
   <div id="app">
     <!-- nav -->
-    <b-nav align="center" id="nav">
-      <!-- <b-nav-text>なにかのURLリスト</b-nav-text> -->
+    <b-nav id="nav">
+      <!-- ページ名 -->
+      <b-nav-item active
+        ><router-link to="/">&lt; 戻る</router-link></b-nav-item
+      >
+
+      <b-nav-text>{{ $route.params.pageName }}</b-nav-text>
     </b-nav>
     <div class="container">
-      <!-- ページ名 -->
-      <router-link to="/"> 戻る</router-link>
-      <h5>{{ $route.params.pageName }}</h5>
       <!-- エラーメッセージを表示するモーダル -->
       <b-modal id="error_modal">{{ errorMessage }}</b-modal>
 
@@ -37,9 +39,9 @@
 
       <!-- 新着 table -->
       <div class="mb-5">
-        <div class="d-flex justify-content-center mt-1">
+        <!-- <div class="d-flex justify-content-center mt-1">
           <h5>新着</h5>
-        </div>
+        </div> -->
         <table-view
           :table-data="latestTable"
           @clickTag="OnClickTag"
@@ -114,6 +116,7 @@ export default {
   components: { TableView },
   data() {
     return {
+      pageId: "",
       name: "",
       address: "",
       errorMessage: "",
@@ -155,6 +158,7 @@ export default {
             result.data.getPageByAddress.items[0].linkDatas.items
           );
         }
+        this.pageId = result.data.getPageByAddress.items[0].id;
         this.name = result.data.getPageByAddress.items[0].name;
         this.address = result.data.getPageByAddress.items[0].address;
         table.isBusy = false;
@@ -216,6 +220,8 @@ export default {
     OnInputTag() {
       if (this.tagTable.searchTag.length > 0) {
         this.searchTag(this.tagTable.searchTag);
+      } else {
+        localStorage.tag = "";
       }
     },
     // tagをクリック時 tag検索
@@ -249,7 +255,9 @@ export default {
   computed: {
     // 作成フォームをクリック時のクエリ
     createLinkDataMutation() {
-      const value = { input: Object.assign({}, this.createForm) };
+      const value = {
+        input: Object.assign({ pageId: this.pageId }, this.createForm),
+      };
       // console.log(value);
       return this.$Amplify.graphqlOperation(createLinkData, value);
     },
