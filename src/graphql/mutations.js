@@ -20,9 +20,12 @@ export const createPage = /* GraphQL */ `
           tag
           createdAt
           updatedAT
+          updatedAt
         }
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -45,9 +48,12 @@ export const updatePage = /* GraphQL */ `
           tag
           createdAt
           updatedAT
+          updatedAt
         }
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -70,9 +76,12 @@ export const deletePage = /* GraphQL */ `
           tag
           createdAt
           updatedAT
+          updatedAt
         }
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -90,6 +99,7 @@ export const createLinkData = /* GraphQL */ `
       tag
       createdAt
       updatedAT
+      updatedAt
     }
   }
 `;
@@ -107,6 +117,7 @@ export const updateLinkData = /* GraphQL */ `
       tag
       createdAt
       updatedAT
+      updatedAt
     }
   }
 `;
@@ -124,6 +135,7 @@ export const deleteLinkData = /* GraphQL */ `
       tag
       createdAt
       updatedAT
+      updatedAt
     }
   }
 `;

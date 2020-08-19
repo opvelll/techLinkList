@@ -17,9 +17,12 @@ export const getPage = /* GraphQL */ `
           tag
           createdAt
           updatedAT
+          updatedAt
         }
         nextToken
       }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -37,6 +40,8 @@ export const listPages = /* GraphQL */ `
         linkDatas {
           nextToken
         }
+        createdAt
+        updatedAt
       }
       nextToken
     }
@@ -53,6 +58,7 @@ export const getLinkData = /* GraphQL */ `
       tag
       createdAt
       updatedAT
+      updatedAt
     }
   }
 `;
@@ -72,6 +78,7 @@ export const listLinkDatas = /* GraphQL */ `
         tag
         createdAt
         updatedAT
+        updatedAt
       }
       nextToken
     }
@@ -81,31 +88,26 @@ export const getPageByAddress = /* GraphQL */ `
   query GetPageByAddress(
     $address: String
     $sortDirection: ModelSortDirection
+    $filter: ModelPageFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    getPageByAddress(address: $address) {
+    getPageByAddress(
+      address: $address
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         name
         address
-        linkDatas(
-          nextToken: $nextToken
-          limit: $limit
-          sortDirection: $sortDirection
-        ) {
-          items {
-            id
-            pageId
-            title
-            description
-            url
-            tag
-            createdAt
-            updatedAT
-          }
+        linkDatas {
           nextToken
         }
+        createdAt
+        updatedAt
       }
       nextToken
     }
