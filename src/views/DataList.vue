@@ -1,14 +1,5 @@
 <template>
   <div id="app">
-    <!-- nav -->
-    <b-nav id="nav">
-      <!-- ページ名 -->
-      <b-nav-item active
-        ><router-link to="/">&lt; 戻る</router-link></b-nav-item
-      >
-
-      <b-nav-text>{{ $route.params.pageName }}</b-nav-text>
-    </b-nav>
     <div class="container">
       <!-- エラーメッセージを表示するモーダル -->
       <b-modal id="error_modal">{{ errorMessage }}</b-modal>
@@ -41,19 +32,12 @@
       <div class="mb-5">
         <!-- <div class="d-flex justify-content-center mt-1">
           <h5>新着</h5>
-        </div> -->
-        <table-view
-          :table-data="latestTable"
-          @clickTag="OnClickTag"
-          @clickNext="OnClickNext"
-        ></table-view>
+        </div>-->
+        <table-view :table-data="latestTable" @clickTag="OnClickTag" @clickNext="OnClickNext"></table-view>
       </div>
 
       <!-- 追加フォーム -->
-      <amplify-connect
-        :mutation="createLinkDataMutation"
-        @done="onCreateFinished"
-      >
+      <amplify-connect :mutation="createLinkDataMutation" @done="onCreateFinished">
         <template slot-scope="{ loading, mutate, errors }">
           <div class>
             <b-card class="mb-2" title="新しくURLを登録する">
@@ -84,18 +68,10 @@
                   ></b-form-input>
                 </b-form-group>
 
-                <div v-for="(error, index) in errors" v-bind:key="index">
-                  {{ error.message }}
-                </div>
+                <div v-for="(error, index) in errors" v-bind:key="index">{{ error.message }}</div>
 
                 <div class="d-flex flex-row-reverse">
-                  <b-button
-                    variant="primary"
-                    class="mr-1"
-                    :disabled="loading"
-                    @click="mutate"
-                    >登録</b-button
-                  >
+                  <b-button variant="primary" class="mr-1" :disabled="loading" @click="mutate">登録</b-button>
                 </div>
               </b-form>
             </b-card>
@@ -107,7 +83,7 @@
 </template>
 
 <script>
-import { getPageByAddress } from "../graphql/queries";
+import { listLinkDatas } from "../graphql/queries";
 import { createLinkData } from "../graphql/mutations";
 import TableView from "../components/TableView";
 
@@ -116,9 +92,6 @@ export default {
   components: { TableView },
   data() {
     return {
-      pageId: "",
-      name: "",
-      address: "",
       errorMessage: "",
       latestTable: {
         nextButton: "続きを読み込む",
@@ -152,18 +125,11 @@ export default {
       return (result) => {
         console.log(result);
         if (isInit) {
-          table.list = result.data.getPageByAddress.items[0].linkDatas.items;
+          table.list = result.data.listLinkDatas.items;
         } else {
-          table.list = table.list.concat(
-            result.data.getPageByAddress.items[0].linkDatas.items
-          );
+          table.list = table.list.concat(result.data.listLinkDatas.items);
         }
-        this.pageId = result.data.getPageByAddress.items[0].id;
-        this.name = result.data.getPageByAddress.items[0].name;
-        this.address = result.data.getPageByAddress.items[0].address;
         table.isBusy = false;
-        table.nextToken =
-          result.data.getPageByAddress.items[0].linkDatas.nextToken;
       };
     },
 
@@ -173,7 +139,7 @@ export default {
     searchLinkDatas(value, f) {
       // console.log(value, f);
       this.$Amplify.API.graphql({
-        query: getPageByAddress,
+        query: listLinkDatas,
         variables: value,
       })
         .then((a) => {
@@ -190,7 +156,6 @@ export default {
     // 全検索
     searchLatestList() {
       var value2 = {
-        address: this.address,
         limit: 10,
       };
       this.searchLinkDatas(
@@ -256,14 +221,13 @@ export default {
     // 作成フォームをクリック時のクエリ
     createLinkDataMutation() {
       const value = {
-        input: Object.assign({ pageId: this.pageId }, this.createForm),
+        input: Object.assign({}, this.createForm),
       };
       // console.log(value);
       return this.$Amplify.graphqlOperation(createLinkData, value);
     },
   },
   mounted() {
-    this.address = this.$route.params.pageName;
     // 全検索
     this.searchLatestList();
 
