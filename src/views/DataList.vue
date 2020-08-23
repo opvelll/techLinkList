@@ -1,32 +1,9 @@
 <template>
   <div id="app">
     <div class="container">
+      <h3>アドレスのリスト</h3>
       <!-- エラーメッセージを表示するモーダル -->
       <b-modal id="error_modal">{{ errorMessage }}</b-modal>
-
-      <!-- 検索 タグテーブル -->
-      <div class="mb-5 mt-2" v-if="tagTable.searchTag.length > 0">
-        <div>
-          <!-- タグ検索フォーム -->
-          <label for="tags-search" class="d-flex justify-content-center">
-            <h5 class="mb-1">タグ検索</h5>
-          </label>
-          <b-form-tags
-            class="mb-2"
-            input-id="tags-search"
-            separator=" ,;"
-            placeholder="入力してスペースキーか、エンターキーを押す"
-            v-model="tagTable.searchTag"
-            @input="OnInputTag"
-          ></b-form-tags>
-        </div>
-        <table-view
-          :table-data="tagTable"
-          @clickTag="OnClickTag"
-          @clickNext="OnClickTagTabelNext"
-          v-if="tagTable.list.length !== 0"
-        ></table-view>
-      </div>
 
       <!-- 新着 table -->
       <div class="mb-5">
@@ -95,13 +72,6 @@ export default {
       errorMessage: "",
       latestTable: {
         nextButton: "続きを読み込む",
-        isBusy: true,
-        list: [],
-        nextToken: "",
-      },
-      tagTable: {
-        nextButton: "続きを読み込む",
-        searchTag: "",
         isBusy: true,
         list: [],
         nextToken: "",
@@ -181,14 +151,7 @@ export default {
         this.tableListUpdateProcess(true, this.tagTable)
       );
     },
-    // tag テーブルに付いている検索
-    OnInputTag() {
-      if (this.tagTable.searchTag.length > 0) {
-        this.searchTag(this.tagTable.searchTag);
-      } else {
-        localStorage.tag = "";
-      }
-    },
+
     // tagをクリック時 tag検索
     OnClickTag(str) {
       this.searchTag([str]);

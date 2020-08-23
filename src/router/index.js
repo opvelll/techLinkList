@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import DataList from "../views/DataList.vue";
+import TagSearch from "../views/TagSearch.vue";
 
 Vue.use(VueRouter);
 
@@ -9,6 +10,11 @@ const routes = [
     path: "/",
     name: "Home",
     component: DataList,
+  },
+  {
+    path: "/tag/",
+    name: "TagSearch",
+    component: TagSearch,
   },
 ];
 
